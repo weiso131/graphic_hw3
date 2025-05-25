@@ -1,5 +1,8 @@
 #ifndef MOTION_HPP
 #define MOTION_HPP
+
+#define DO_NOTHING -1
+
 typedef struct motion {
     float rx;
     float ry;
