@@ -3,18 +3,19 @@
 
 #define DO_NOTHING -1
 
-typedef struct motion {
+struct Motion {
     float rx;
     float ry;
     float rz;
-    
-    float sx;
-    float sy;
-    float sz;
-    
+
     float tx;
     float ty;
     float tz;
-    int speed_num; //決定當前子動作的完成度，數字越大越慢完成
-} Motion;
+
+    // 建構子
+    Motion(float rx, float ry, float rz,
+           float tx, float ty, float tz)
+        : rx(rx), ry(ry), rz(rz),
+          tx(tx), ty(ty), tz(tz) {}
+};
 #endif
