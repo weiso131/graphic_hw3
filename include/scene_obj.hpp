@@ -18,7 +18,7 @@ public:
     
     Shader *shaderProgram;
     glm::mat4 model, child_transform;
-    Motion **motion_flow;
+    std::vector<std::vector<Motion>> *motion_flow;
     unsigned int surface_num;
 
     std::vector<SceneObject*> children;
@@ -27,7 +27,7 @@ public:
     float tx, ty, tz;
 
     SceneObject(float *vertices, Shader *shaderProgram, glm::mat4 model, 
-                    glm::mat4 child_transform, Motion **motion_flow, unsigned int surface_num);
+                    glm::mat4 child_transform, std::vector<std::vector<Motion>> *motion_flow, unsigned int surface_num);
 
     void dfs_draw(glm::mat4 &ptransform, glm::mat4 &view, glm::mat4 &projection, int motion_idx);
     void add_child(SceneObject *child_obj);
@@ -36,6 +36,7 @@ private:
     unsigned int VAO;
     int flow_cnt;
     int speed_cnt;
+    int last_motion;
 };
 
 #endif

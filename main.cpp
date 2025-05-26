@@ -7,6 +7,9 @@
 #include <glm/gtc/type_ptr.hpp>
 
 #include "shader.hpp"
+#include "scene_obj.hpp"
+#include "motion.hpp"
+#include "test_arm.hpp"
 
 void framebuffer_size_callback(GLFWwindow* window, int width, int height) {
     glViewport(0, 0, width, height);
@@ -108,45 +111,33 @@ int main() {
         return -1;
     }
 
-    unsigned int VBO, VAO;
-    glGenVertexArrays(1, &VAO);
-    glGenBuffers(1, &VBO);
+    Shader *global_shader = create_shader(&vertexShaderSource, &fragmentShaderSourece);
 
-    glBindVertexArray(VAO);
-    glBindBuffer(GL_ARRAY_BUFFER, VBO); 
-    glBufferData(GL_ARRAY_BUFFER, sizeof(vertices), vertices, GL_STATIC_DRAW);
-    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(float), (void*)0);
-    glEnableVertexAttribArray(0);
-
-
-    glBindVertexArray(0);
-    glBindBuffer(GL_ARRAY_BUFFER, 0);
+    glm::mat4 view            = glm::mat4(1.0f);
+    glm::mat4 projection      = glm::mat4(1.0f);
+    glm::mat4 model           = glm::mat4(1.0f);
+    glm::mat4 child_transform = glm::mat4(1.0f);
+    SceneObject *test_obj = generate_arm(global_shader);
 
     
 
     glEnable(GL_DEPTH_TEST);
     
-    glm::mat4 view          = glm::mat4(1.0f);
-    glm::mat4 projection    = glm::mat4(1.0f);
     
-    view = glm::translate(view, glm::vec3(0.0f, 0.0f, -3.0f));
+    
+    view = glm::translate(view, glm::vec3(0.0f, 0.0f, -10.0f));
     projection = glm::perspective(glm::radians(45.0f), (float)800 / (float)600, 0.1f, 100.0f);
 
-    Shader *global_shader = create_shader(&vertexShaderSource, &fragmentShaderSourece);
-
-    glUseProgram(global_shader->shader_program);
     // 主迴圈
     while (!glfwWindowShouldClose(window)) {
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-        glm::mat4 model         = glm::mat4(1.0f); 
-        model = glm::rotate(model, (float)glfwGetTime() * glm::radians(50.0f), glm::vec3(0.5f, 1.0f, 0.0f));
         
-        glUniformMatrix4fv(global_shader->modelLoc, 1, GL_FALSE, glm::value_ptr(model));
-        glUniformMatrix4fv(global_shader->viewLoc, 1, GL_FALSE, glm::value_ptr(view));
-        glUniformMatrix4fv(global_shader->projectionLoc, 1, GL_FALSE, glm::value_ptr(projection));
-        glBindVertexArray(VAO);
-        glDrawArrays(GL_TRIANGLES, 0, 36);
-        glBindVertexArray(0);
+        glm::mat4 ptransform = glm::mat4(1.0f); 
+        ptransform = glm::rotate(ptransform, (float)glfwGetTime() * glm::radians(50.0f), glm::vec3(0.0f, 1.0f, 0.0f));
+
+
+        test_obj->dfs_draw(ptransform, view, projection, 0);
+
         processInput(window);
         // 換 buffer & 處理事件
         glfwSwapBuffers(window);
