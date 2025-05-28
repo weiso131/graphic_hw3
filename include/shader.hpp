@@ -6,6 +6,7 @@ typedef struct shader {
     unsigned int modelLoc;
     unsigned int viewLoc; //跟攝影機的相對位置
     unsigned int projectionLoc; // 投影
+    unsigned int colorsLoc;
 } Shader;
 
 Shader *create_shader(const char **vertexShaderSource, const char **fragmentShader);

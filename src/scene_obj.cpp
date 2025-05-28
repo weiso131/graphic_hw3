@@ -6,7 +6,8 @@
 }
 
 SceneObject::SceneObject(float *vertices, Shader *shaderProgram, glm::mat4 model,
-                    glm::mat4 child_transform, std::vector<std::vector<Motion>> *motion_flow, unsigned int surface_num) {
+                    glm::mat4 child_transform, std::vector<std::vector<Motion>> *motion_flow, 
+                    unsigned int surface_num, RGBA *colors) {
     
     unsigned int VBO;
         
@@ -27,6 +28,19 @@ SceneObject::SceneObject(float *vertices, Shader *shaderProgram, glm::mat4 model
     this->child_transform = child_transform;
     this->motion_flow = motion_flow;
     this->surface_num = surface_num;
+
+    if (colors) {
+        this->red_value = colors->red_value;
+        this->green_value = colors->green_value;
+        this->blue_value = colors->blue_value;
+        this->alpha_value = colors->alpha_value;
+    }
+    else {
+        this->red_value = 1.0f;
+        this->green_value = 1.0f;
+        this->blue_value = 1.0f;
+        this->alpha_value = 0.9f;
+    }
 
     this->rx = this->ry = this->rz = this->tx = this->ty = this->tz = 0.0f;
     this->last_motion = DO_NOTHING;
@@ -74,7 +88,8 @@ glm::mat4 &projection, int motion_idx) {
     glUniformMatrix4fv(ShaderProgram->viewLoc, 1, GL_FALSE, glm::value_ptr(view));
     glUniformMatrix4fv(ShaderProgram->projectionLoc, 1, GL_FALSE, glm::value_ptr(projection));
     glUniformMatrix4fv(ShaderProgram->modelLoc, 1, GL_FALSE, glm::value_ptr(self_model));
-    
+    glUniform4f(ShaderProgram->colorsLoc, this->red_value, this->green_value, this->blue_value, this->alpha_value);
+
     glDrawArrays(GL_TRIANGLES, 0, this->surface_num);
     glBindVertexArray(0);
     glUseProgram(0);

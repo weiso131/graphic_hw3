@@ -52,6 +52,7 @@ Shader *create_shader(const char **vertexShaderSource, const char **fragmentShad
     shader->modelLoc = glGetUniformLocation(shaderProgram, "model");
     shader->viewLoc = glGetUniformLocation(shaderProgram, "view");
     shader->projectionLoc = glGetUniformLocation(shaderProgram, "projection");
+    shader->colorsLoc = glGetUniformLocation(shaderProgram, "ourColor");
     glDeleteShader(vertexShader);
     glDeleteShader(fragmentShader);
 
