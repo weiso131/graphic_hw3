@@ -29,7 +29,7 @@ public:
     SceneObject(float *vertices, Shader *shaderProgram, glm::mat4 model, 
                     glm::mat4 child_transform, std::vector<std::vector<Motion>> *motion_flow, unsigned int surface_num);
 
-    void dfs_draw(glm::mat4 &ptransform, glm::mat4 &view, glm::mat4 &projection, int motion_idx);
+    int dfs_draw(glm::mat4 &ptransform, glm::mat4 &view, glm::mat4 &projection, int motion_idx);
     void add_child(SceneObject *child_obj);
 
 private:

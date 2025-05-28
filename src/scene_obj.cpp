@@ -33,8 +33,10 @@ SceneObject::SceneObject(float *vertices, Shader *shaderProgram, glm::mat4 model
     this->flow_cnt = this->speed_cnt = 0;
 }
 
-void SceneObject::dfs_draw(glm::mat4 &ptransform, glm::mat4 &view, \
+int SceneObject::dfs_draw(glm::mat4 &ptransform, glm::mat4 &view, \
 glm::mat4 &projection, int motion_idx) {
+    int motion_not_complete = 1;
+
     Shader *ShaderProgram = this->shaderProgram;
     glBindVertexArray(this->VAO);
     glUseProgram(ShaderProgram->shader_program);
@@ -55,11 +57,11 @@ glm::mat4 &projection, int motion_idx) {
         this->flow_cnt++;
         if (this->flow_cnt == (*this->motion_flow)[motion_idx].size()) {
             this->flow_cnt--;
-            //Todo: 可能要告知使用者動作完成了
+            motion_not_complete = 0;
         }
-            
     }
-        
+    else 
+        motion_not_complete = 0;
     glm::mat4 world_model, self_model;
     glm::mat4 translate_mat = glm::translate(glm::mat4(1.0f), glm::vec3(this->tx, this->ty, this->tz));
     glm::mat4 rotate_mat = glm::rotate(glm::mat4(1.0f), glm::radians(this->rx), glm::vec3(1.0f, 0.0f, 0.0f));
@@ -78,7 +80,8 @@ glm::mat4 &projection, int motion_idx) {
     glUseProgram(0);
 
     for (SceneObject *child_obj : this->children) 
-        child_obj->dfs_draw(world_model, view, projection, motion_idx);
+        motion_not_complete += child_obj->dfs_draw(world_model, view, projection, motion_idx);
+    return motion_not_complete;
 }
 
 void SceneObject::add_child(SceneObject *child_obj) {
