@@ -101,7 +101,7 @@ static SceneObject *generate_transformer(Shader *global_shader)
     //頭
     glm::mat4 head_model = glm::mat4(1.0f);
     head_model = glm::scale(head_model, glm::vec3(3.0f, 3.0f, 3.0f));
-    glm::mat4 head_tc = glm::translate(glm::mat4(1.0f), glm::vec3(0.0f, 4.0f, 0.0f));
+    glm::mat4 head_ct = glm::translate(glm::mat4(1.0f), glm::vec3(0.0f, 4.0f, 0.0f));
     auto* head_motion = new std::vector<std::vector<Motion>> {
         {},
         {}
@@ -109,13 +109,13 @@ static SceneObject *generate_transformer(Shader *global_shader)
     add_motion(head_motion, 100, 0, 0, 0, 0, 0, -4.0f, 0);
     add_motion_reverse(head_motion, 100, 1, 0, 0, 0, 0, -4.0f, 0);
 
-    SceneObject *head = new SceneObject(vertices, global_shader, head_model, head_tc, head_motion, 36, head_color);
+    SceneObject *head = new SceneObject(vertices, global_shader, head_model, head_ct, head_motion, 36, head_color);
     main_body->add_child(head);
 
     //腰部
     glm::mat4 waist_model = glm::mat4(1.0f);
     waist_model = glm::scale(waist_model, glm::vec3(7.0f, 4.0f, 3.0f));
-    glm::mat4 waist_tc = glm::translate(glm::mat4(1.0f), glm::vec3(0.0f, -4.5f, 0.0f));
+    glm::mat4 waist_ct = glm::translate(glm::mat4(1.0f), glm::vec3(0.0f, -4.5f, 0.0f));
     auto* waist_motion = new std::vector<std::vector<Motion>>{
         {},
         {}
@@ -123,7 +123,7 @@ static SceneObject *generate_transformer(Shader *global_shader)
     add_motion(waist_motion, 100, 0, 0, 0, 0, 0, 1.5f, 0.4f);
     add_motion_reverse(waist_motion, 100, 1, 0, 0, 0, 0, 1.5f, 0.4f);
 
-    SceneObject *waist = new SceneObject(vertices, global_shader, waist_model, waist_tc, waist_motion, 36, metal_gray_color);   
+    SceneObject *waist = new SceneObject(vertices, global_shader, waist_model, waist_ct, waist_motion, 36, metal_gray_color);   
     main_body->add_child(waist);
 
     //腹部
@@ -147,7 +147,7 @@ static SceneObject *generate_transformer(Shader *global_shader)
 
     //左手臂
     // arm 1
-    glm::mat4 left_arm1_tc = glm::translate(glm::mat4(1.0f), glm::vec3(5.75f, 2.0f, 0.0f));
+    glm::mat4 left_arm1_ct = glm::translate(glm::mat4(1.0f), glm::vec3(5.75f, 2.0f, 0.0f));
     auto* left_arm1_motion = new std::vector<std::vector<Motion>>{
         {},
         {}
@@ -156,11 +156,11 @@ static SceneObject *generate_transformer(Shader *global_shader)
     add_motion(left_arm1_motion, 100, 0, 0, 0, 0, -2.5f, 0, -3.25f);
     add_motion_reverse(left_arm1_motion, 100, 1, 0, 0, 0, -2.5f, 0, -3.25f);
 
-    SceneObject *left_arm1 = new SceneObject(vertices, global_shader, arm_model, left_arm1_tc, left_arm1_motion, 36, main_body_color);
+    SceneObject *left_arm1 = new SceneObject(vertices, global_shader, arm_model, left_arm1_ct, left_arm1_motion, 36, main_body_color);
     main_body->add_child(left_arm1);
 
     // arm 2
-    glm::mat4 left_arm2_tc = glm::translate(glm::mat4(1.0f), glm::vec3(0.0f, -6.0f, 0.0f));
+    glm::mat4 left_arm2_ct = glm::translate(glm::mat4(1.0f), glm::vec3(0.0f, -6.0f, 0.0f));
     auto* left_arm2_motion = new std::vector<std::vector<Motion>>{
         {},
         {}
@@ -169,19 +169,19 @@ static SceneObject *generate_transformer(Shader *global_shader)
     add_motion(left_arm2_motion, 100, 0, -90.0f, 0, 0, 0, 0.25f, -0.75f);
     add_motion_reverse(left_arm2_motion, 100, 1, -90.0f, 0, 0, 0, 0.25f, -0.75f);
 
-    SceneObject *left_arm2 = new SceneObject(vertices, global_shader, arm_model, left_arm2_tc, left_arm2_motion, 36, main_body_color);
+    SceneObject *left_arm2 = new SceneObject(vertices, global_shader, arm_model, left_arm2_ct, left_arm2_motion, 36, main_body_color);
     left_arm1->add_child(left_arm2);
 
     // left_arm_wheel
-    glm::mat4 left_arm_wheel_tc = glm::translate(glm::mat4(1.0f), glm::vec3(1.25f, -3.75f, -1.25f));
+    glm::mat4 left_arm_wheel_ct = glm::translate(glm::mat4(1.0f), glm::vec3(1.25f, -3.75f, -1.25f));
     SceneObject *left_arm_wheel = new SceneObject(vertices, global_shader, wheel_model, \
-                                        left_arm_wheel_tc, no_motion, 36, wheel_color);
+                                        left_arm_wheel_ct, no_motion, 36, wheel_color);
     left_arm2->add_child(left_arm_wheel);
 
     //右手臂
     // arm 1
     
-    glm::mat4 right_arm1_tc = glm::translate(glm::mat4(1.0f), glm::vec3(-5.75f, 2.0f, 0.0f));
+    glm::mat4 right_arm1_ct = glm::translate(glm::mat4(1.0f), glm::vec3(-5.75f, 2.0f, 0.0f));
     auto* right_arm1_motion = new std::vector<std::vector<Motion>>{
         {},
         {}
@@ -189,11 +189,11 @@ static SceneObject *generate_transformer(Shader *global_shader)
     add_motion(right_arm1_motion, 100, 0, 0, 0, 0, 2.5f, 0, -3.25f);
     add_motion_reverse(right_arm1_motion, 100, 1, 0, 0, 0, 2.5f, 0, -3.25f);
 
-    SceneObject *right_arm1 = new SceneObject(vertices, global_shader, arm_model, right_arm1_tc, right_arm1_motion, 36, main_body_color);
+    SceneObject *right_arm1 = new SceneObject(vertices, global_shader, arm_model, right_arm1_ct, right_arm1_motion, 36, main_body_color);
     main_body->add_child(right_arm1);
 
     // arm 2
-    glm::mat4 right_arm2_tc = glm::translate(glm::mat4(1.0f), glm::vec3(0.0f, -6.0f, 0.0f));
+    glm::mat4 right_arm2_ct = glm::translate(glm::mat4(1.0f), glm::vec3(0.0f, -6.0f, 0.0f));
     auto* right_arm2_motion = new std::vector<std::vector<Motion>>{
         {},
         {}
@@ -202,13 +202,13 @@ static SceneObject *generate_transformer(Shader *global_shader)
     add_motion(right_arm2_motion, 100, 0, -90.0f, 0, 0, 0, 0.25f, -0.75f);
     add_motion_reverse(right_arm2_motion, 100, 1, -90.0f, 0, 0, 0, 0.25f, -0.75f);
 
-    SceneObject *right_arm2 = new SceneObject(vertices, global_shader, arm_model, right_arm2_tc, right_arm2_motion, 36, main_body_color);
+    SceneObject *right_arm2 = new SceneObject(vertices, global_shader, arm_model, right_arm2_ct, right_arm2_motion, 36, main_body_color);
     right_arm1->add_child(right_arm2);
 
     // right_arm_wheel
-    glm::mat4 right_arm_wheel_tc = glm::translate(glm::mat4(1.0f), glm::vec3(-1.25f, -3.75f, -1.25f));
+    glm::mat4 right_arm_wheel_ct = glm::translate(glm::mat4(1.0f), glm::vec3(-1.25f, -3.75f, -1.25f));
     SceneObject *right_arm_wheel = new SceneObject(vertices, global_shader, wheel_model, \
-                                        right_arm_wheel_tc, no_motion, 36, wheel_color);
+                                        right_arm_wheel_ct, no_motion, 36, wheel_color);
     right_arm2->add_child(right_arm_wheel);
 
     //leg 1 模型
@@ -240,12 +240,12 @@ static SceneObject *generate_transformer(Shader *global_shader)
 
     //左腿
     //leg1
-    glm::mat4 left_leg1_tc = glm::translate(glm::mat4(1.0f), glm::vec3(1.5f, -1.0f, 0.0f));
-    SceneObject *left_leg1 = new SceneObject(vertices, global_shader, leg1_model, left_leg1_tc, leg1_motion, 36, metal_gray_color);
+    glm::mat4 left_leg1_ct = glm::translate(glm::mat4(1.0f), glm::vec3(1.5f, -1.0f, 0.0f));
+    SceneObject *left_leg1 = new SceneObject(vertices, global_shader, leg1_model, left_leg1_ct, leg1_motion, 36, metal_gray_color);
     abdomen->add_child(left_leg1);
 
     //leg2
-    glm::mat4 left_leg2_tc = glm::translate(glm::mat4(1.0f), glm::vec3(0.25f, -6.5f, 0.0f));
+    glm::mat4 left_leg2_ct = glm::translate(glm::mat4(1.0f), glm::vec3(0.25f, -6.5f, 0.0f));
 
     auto* left_leg2_motion = new std::vector<std::vector<Motion>>{
         {},
@@ -254,30 +254,30 @@ static SceneObject *generate_transformer(Shader *global_shader)
     add_motion(left_leg2_motion, 100, 0, 0, 0, 0, 1.0f, 3.0f, 0);
     add_motion_reverse(left_leg2_motion, 100, 1, 0, 0, 0, 1.0f, 3.0f, 0);
 
-    SceneObject *left_leg2 = new SceneObject(vertices, global_shader, leg2_model, left_leg2_tc, left_leg2_motion, 36, head_color);
+    SceneObject *left_leg2 = new SceneObject(vertices, global_shader, leg2_model, left_leg2_ct, left_leg2_motion, 36, head_color);
     left_leg1->add_child(left_leg2);
 
     // left_leg_wheel1
-    glm::mat4 left_leg_wheel1_tc = glm::translate(glm::mat4(1.0f), glm::vec3(1.5f, -2.0f, -1.5f));
+    glm::mat4 left_leg_wheel1_ct = glm::translate(glm::mat4(1.0f), glm::vec3(1.5f, -2.0f, -1.5f));
     SceneObject *left_leg_wheel1 = new SceneObject(vertices, global_shader, wheel_model, \
-                                        left_leg_wheel1_tc, no_motion, 36, wheel_color);
+                                        left_leg_wheel1_ct, no_motion, 36, wheel_color);
     left_leg2->add_child(left_leg_wheel1);
 
     // left_leg_wheel2
-    glm::mat4 left_leg_wheel2_tc = glm::translate(glm::mat4(1.0f), glm::vec3(1.5f, -6.0f, -1.5f));
+    glm::mat4 left_leg_wheel2_ct = glm::translate(glm::mat4(1.0f), glm::vec3(1.5f, -6.0f, -1.5f));
     SceneObject *left_leg_wheel2 = new SceneObject(vertices, global_shader, wheel_model, \
-                                        left_leg_wheel2_tc, no_motion, 36, wheel_color);
+                                        left_leg_wheel2_ct, no_motion, 36, wheel_color);
     left_leg2->add_child(left_leg_wheel2);
     left_leg2->add_child(feet);
 
     //右腿
     //leg1
-    glm::mat4 right_leg1_tc = glm::translate(glm::mat4(1.0f), glm::vec3(-1.5f, -1.0f, 0.0f));
-    SceneObject *right_leg1 = new SceneObject(vertices, global_shader, leg1_model, right_leg1_tc, leg1_motion, 36, metal_gray_color);
+    glm::mat4 right_leg1_ct = glm::translate(glm::mat4(1.0f), glm::vec3(-1.5f, -1.0f, 0.0f));
+    SceneObject *right_leg1 = new SceneObject(vertices, global_shader, leg1_model, right_leg1_ct, leg1_motion, 36, metal_gray_color);
     abdomen->add_child(right_leg1);
 
     //leg2
-    glm::mat4 right_leg2_tc = glm::translate(glm::mat4(1.0f), glm::vec3(-0.25f, -6.5f, 0.0f));
+    glm::mat4 right_leg2_ct = glm::translate(glm::mat4(1.0f), glm::vec3(-0.25f, -6.5f, 0.0f));
 
     auto* right_leg2_motion = new std::vector<std::vector<Motion>>{
         {},
@@ -286,19 +286,19 @@ static SceneObject *generate_transformer(Shader *global_shader)
     add_motion(right_leg2_motion, 100, 0, 0, 0, 0, -1.0f, 3.0f, 0);
     add_motion_reverse(right_leg2_motion, 100, 1, 0, 0, 0, -1.0f, 3.0f, 0);
 
-    SceneObject *right_leg2 = new SceneObject(vertices, global_shader, leg2_model, right_leg2_tc, right_leg2_motion, 36, head_color);
+    SceneObject *right_leg2 = new SceneObject(vertices, global_shader, leg2_model, right_leg2_ct, right_leg2_motion, 36, head_color);
     right_leg1->add_child(right_leg2);
 
     // right_leg_wheel1
-    glm::mat4 right_leg_wheel1_tc = glm::translate(glm::mat4(1.0f), glm::vec3(-1.5f, -2.0f, -1.5f));
+    glm::mat4 right_leg_wheel1_ct = glm::translate(glm::mat4(1.0f), glm::vec3(-1.5f, -2.0f, -1.5f));
     SceneObject *right_leg_wheel1 = new SceneObject(vertices, global_shader, wheel_model, \
-                                        right_leg_wheel1_tc, no_motion, 36, wheel_color);
+                                        right_leg_wheel1_ct, no_motion, 36, wheel_color);
     right_leg2->add_child(right_leg_wheel1);
 
     // right_leg_wheel2
-    glm::mat4 right_leg_wheel2_tc = glm::translate(glm::mat4(1.0f), glm::vec3(-1.5f, -6.0f, -1.5f));
+    glm::mat4 right_leg_wheel2_ct = glm::translate(glm::mat4(1.0f), glm::vec3(-1.5f, -6.0f, -1.5f));
     SceneObject *right_leg_wheel2 = new SceneObject(vertices, global_shader, wheel_model, \
-                                        right_leg_wheel2_tc, no_motion, 36, wheel_color);
+                                        right_leg_wheel2_ct, no_motion, 36, wheel_color);
     right_leg2->add_child(right_leg_wheel2);
 
     right_leg2->add_child(feet);
