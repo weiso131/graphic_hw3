@@ -44,7 +44,7 @@ SceneObject::SceneObject(float *vertices, Shader *shaderProgram, glm::mat4 model
 
     this->rx = this->ry = this->rz = this->tx = this->ty = this->tz = 0.0f;
     this->last_motion = DO_NOTHING;
-    this->flow_cnt = this->speed_cnt = 0;
+    this->flow_cnt = 0;
 }
 
 int SceneObject::dfs_draw(glm::mat4 &ptransform, glm::mat4 &view, \
@@ -57,7 +57,7 @@ glm::mat4 &projection, int motion_idx) {
 
 
     if (motion_idx != this->last_motion) {
-        this->flow_cnt = this->speed_cnt = 0;
+        this->flow_cnt = 0;
         this->last_motion = motion_idx;
     } 
     if (motion_idx != DO_NOTHING) {

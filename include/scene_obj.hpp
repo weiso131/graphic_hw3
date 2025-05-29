@@ -45,7 +45,6 @@ public:
 private:
     unsigned int VAO;
     int flow_cnt;
-    int speed_cnt;
     int last_motion;
 };
 
