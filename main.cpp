@@ -10,6 +10,7 @@
 #include "scene_obj.hpp"
 #include "motion.hpp"
 #include "optimus_prime.hpp"
+#include "camera.hpp"
 
 #define WIDTH 1920
 #define HEIGHT 1090
@@ -17,53 +18,63 @@
 void framebuffer_size_callback(GLFWwindow* window, int width, int height) {
     glViewport(0, 0, width, height);
 }
-void processInput(GLFWwindow *window)
+void processInput(GLFWwindow *window, float deltaTime)
 {
+    Camera *camera = static_cast<Camera*>(glfwGetWindowUserPointer(window));
+    float cameraSpeed = 10.0f * deltaTime; // adjust accordingly
+    
+    glm::vec3 horizontalFront = glm::normalize(glm::vec3(camera->front.x, 0.0f, camera->front.z));
+    glm::vec3 right = glm::normalize(glm::cross(horizontalFront, camera->up));
+
     if(glfwGetKey(window, GLFW_KEY_ESCAPE) == GLFW_PRESS)
         glfwSetWindowShouldClose(window, true);
-}
-
-glm::mat4 camera(GLFWwindow* window, float &model_rx, float &model_ry, float &dis_x, float &dis_y, float &dis_z) {
-    if (glfwGetKey(window, GLFW_KEY_UP) == GLFW_PRESS) 
-        model_rx -= 1.0f;
-
-    if (glfwGetKey(window, GLFW_KEY_DOWN) == GLFW_PRESS)
-        model_rx += 1.0f;
-
-    if (glfwGetKey(window, GLFW_KEY_LEFT) == GLFW_PRESS) 
-        model_ry -= 1.0f;
-
-    if (glfwGetKey(window, GLFW_KEY_RIGHT) == GLFW_PRESS)
-        model_ry += 1.0f;
-
-    if (glfwGetKey(window, GLFW_KEY_W) == GLFW_PRESS) 
-        dis_z += 0.5f;
-
+    if (glfwGetKey(window, GLFW_KEY_W) == GLFW_PRESS)
+        camera->pos += cameraSpeed * horizontalFront;
     if (glfwGetKey(window, GLFW_KEY_S) == GLFW_PRESS)
-        dis_z -= 0.5f;
-
+        camera->pos -= cameraSpeed * horizontalFront;
     if (glfwGetKey(window, GLFW_KEY_A) == GLFW_PRESS)
-        dis_x += 0.5f;
-
+        camera->pos -= right * cameraSpeed;
     if (glfwGetKey(window, GLFW_KEY_D) == GLFW_PRESS)
-        dis_x -= 0.5f;
-    
+        camera->pos += right * cameraSpeed;
     if (glfwGetKey(window, GLFW_KEY_SPACE) == GLFW_PRESS)
-        dis_y -= 0.5f;
-
+        camera->pos += glm::vec3(0.0f, 1.0f, 0.0f) * cameraSpeed;
     if (glfwGetKey(window, GLFW_KEY_LEFT_CONTROL) == GLFW_PRESS)
-        dis_y += 0.5f;
-    glm::mat4 world_transform = glm::mat4(1.0f); 
-    
-    world_transform = glm::translate(world_transform, glm::vec3(dis_x, dis_y, dis_z));
-    world_transform = glm::rotate(world_transform, glm::radians(model_ry), glm::vec3(0.0f, 1.0f, 0.0f));
-    world_transform = glm::rotate(world_transform, glm::radians(model_rx), glm::vec3(1.0f, 0.0f, 0.0f));
-    
-    world_transform = glm::scale(world_transform, glm::vec3(0.25f, 0.25f, 0.25f));
-
-    return world_transform;
+        camera->pos -= glm::vec3(0.0f, 1.0f, 0.0f) * cameraSpeed;
 }
 
+void mouse_callback(GLFWwindow* window, double xpos, double ypos)
+{
+    Camera *camera = static_cast<Camera*>(glfwGetWindowUserPointer(window));
+    if(camera->first_mouse)
+    {
+        camera->last_x = xpos;
+        camera->last_y = ypos;
+        camera->first_mouse = false;
+    }
+
+    float xoffset = xpos - camera->last_x;
+    float yoffset = camera->last_y - ypos; 
+    camera->last_x = xpos;
+    camera->last_y = ypos;
+
+    float sensitivity = 0.05;
+    xoffset *= sensitivity;
+    yoffset *= sensitivity;
+
+    camera->yaw   += xoffset;
+    camera->pitch += yoffset;
+
+    if(camera->pitch > 89.0f)
+        camera->pitch = 89.0f;
+    if(camera->pitch < -89.0f)
+        camera->pitch = -89.0f;
+
+    glm::vec3 front;
+    front.x = cos(glm::radians(camera->yaw)) * cos(glm::radians(camera->pitch));
+    front.y = sin(glm::radians(camera->pitch));
+    front.z = sin(glm::radians(camera->yaw)) * cos(glm::radians(camera->pitch));
+    camera->front = glm::normalize(front);
+}
 
 int main() {
     float vertices[] = {
@@ -169,19 +180,26 @@ int main() {
     glEnable(GL_DEPTH_TEST);
     
     
-    
-    view = glm::translate(view, glm::vec3(0.0f, 0.0f, 0.0f));
+    Camera camera;
+    glfwSetWindowUserPointer(window, &camera);
+    glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
+    glfwSetCursorPosCallback(window, mouse_callback);
     projection = glm::perspective(glm::radians(45.0f), (float)WIDTH / (float)HEIGHT, 0.1f, 100.0f);
 
-    float model_rx = 0.0f, model_ry = 0.0f, dis_x = 0.0f, dis_y = 0.0f, dis_z = 0.0f;
     bool animation_lock = false;
     int motion_choice = DO_NOTHING, transform = 0;
+    static float lastFrame = 0.0f;
     // 主迴圈
     while (!glfwWindowShouldClose(window)) {
-        glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
         
 
-        glm::mat4 world_transform = camera(window, model_rx, model_ry, dis_x, dis_y, dis_z);
+        float currentFrame = glfwGetTime();
+        float deltaTime = currentFrame - lastFrame;
+        lastFrame = currentFrame;
+
+        glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+        processInput(window, deltaTime);
+        view = view = glm::lookAt(camera.pos, camera.pos + camera.front, camera.up);
 
         if (!animation_lock) {
             if (glfwGetKey(window, GLFW_KEY_T) == GLFW_PRESS) {
@@ -190,7 +208,7 @@ int main() {
             }
         }
 
-        int not_complete_num = transformer_obj->dfs_draw(world_transform, view, projection, motion_choice);
+        int not_complete_num = transformer_obj->dfs_draw(glm::mat4(1.0f), view, projection, motion_choice);
 
         if (not_complete_num == 0) {
             animation_lock = false;
@@ -199,8 +217,7 @@ int main() {
         else
             animation_lock = true;
 
-        processInput(window);
-        // 換 buffer & 處理事件
+        
         glfwSwapBuffers(window);
         glfwPollEvents();
     }
